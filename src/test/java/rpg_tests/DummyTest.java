@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import rpg_lab.Dummy;
+import rpg_lab.Target;
 
 import static org.junit.Assert.*;
 
@@ -12,10 +13,9 @@ public class DummyTest {
     private static final int DUMMY_EXPERIENCE = 100;
     private static final int DEAD_DUMMY_HEALTH = 0;
     private static final int ATTACK_POINT = 10;
-    private static final int EXPECTED_DUMMY_HEALTH = DUMMY_HEALTH - ATTACK_POINT;
 
-    private Dummy dummy;
-    private Dummy deadDummy;
+    private Target dummy;
+    private Target deadDummy;
 
     @BeforeTest
     public void setUp() {
@@ -31,7 +31,7 @@ public class DummyTest {
 
         dummy.takeAttack(ATTACK_POINT);
 
-        assertEquals(EXPECTED_DUMMY_HEALTH, dummy.getHealth());
+        assertEquals(DUMMY_HEALTH - ATTACK_POINT, dummy.getHealth());
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
