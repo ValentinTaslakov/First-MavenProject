@@ -1,19 +1,26 @@
 package rpg_tests;
 
-import org.junit.Before;
+import org.junit.Assert;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import rpg_lab.Dummy;
 
 import static org.junit.Assert.*;
 
 public class DummyTest {
+    private static final int DUMMY_HEALTH = 100;
+    private static final int DUMMY_EXPERIENCE = 100;
+    private static final int DEAD_DUMMY_HEALTH = 0;
+    private static final int ATTACK_POINT = 10;
+    private static final int EXPECTED_DUMMY_HEALTH = DUMMY_HEALTH - ATTACK_POINT;
+
     private Dummy dummy;
     private Dummy deadDummy;
 
-    @Before
-    public void setUp(){
-        this.dummy = new Dummy(100,100);
-        this.deadDummy = new Dummy(0,100);
+    @BeforeTest
+    public void setUp() {
+        this.dummy = new Dummy(DUMMY_HEALTH, DUMMY_EXPERIENCE);
+        this.deadDummy = new Dummy(DEAD_DUMMY_HEALTH, DUMMY_EXPERIENCE);
 
 
     }
@@ -22,16 +29,26 @@ public class DummyTest {
     @Test
     public void testDummyLossesHealthWhenAttacked() {
 
-        int attackPoint = 10;
+        dummy.takeAttack(ATTACK_POINT);
 
-        dummy.takeAttack(attackPoint);
-
-        assertEquals(90,dummy.getHealth());
+        assertEquals(EXPECTED_DUMMY_HEALTH, dummy.getHealth());
     }
 
-    @Test (expectedExceptions = IllegalStateException.class)
-    public void testDeadDummyThrowsWhenAttacked( ){
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testDeadDummyThrowsWhenAttacked() {
 
-        deadDummy.takeAttack(10);
+        deadDummy.takeAttack(ATTACK_POINT);
     }
+
+    @Test
+    public void testDeadDummyCanGiveXP() {
+
+        Assert.assertEquals(DUMMY_EXPERIENCE,deadDummy.giveExperience());
+    }
+
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testAliveDummyCanGiveXP() {
+        dummy.giveExperience();
+    }
+
 }
